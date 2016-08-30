@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>map.png</file>
+        <file>map_vhf.png</file>
+    </qresource>
+</RCC>
