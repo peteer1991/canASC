@@ -1,0 +1,1759 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>6.2</ProjectVersion>
+    <ToolchainName>com.Atmel.AVRGCC8.C</ToolchainName>
+    <ProjectGuid>{37216275-9165-45ea-b841-61a282168276}</ProjectGuid>
+    <avrdevice>ATxmega64A1</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>Executable</OutputType>
+    <Language>C</Language>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AssemblyName>rotor controller</AssemblyName>
+    <Name>rotor controller</Name>
+    <RootNamespace>rotor controller</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <AsfVersion>3.5.0</AsfVersion>
+    <avrtool>com.atmel.avrdbg.tool.avrdragon</avrtool>
+    <avrtoolinterface>JTAG</avrtoolinterface>
+    <com_atmel_avrdbg_tool_simulator>
+      <ToolType>com.atmel.avrdbg.tool.simulator</ToolType>
+      <ToolName>Simulator</ToolName>
+      <ToolNumber>
+      </ToolNumber>
+      <Channel>
+        <host>127.0.0.1</host>
+        <port>54015</port>
+        <ssl>False</ssl>
+      </Channel>
+      <ToolOptions>
+        <InterfaceProperties>
+        </InterfaceProperties>
+        <InterfaceName>
+        </InterfaceName>
+      </ToolOptions>
+    </com_atmel_avrdbg_tool_simulator>
+    <com_atmel_avrdbg_tool_avrdragon>
+      <ToolType>com.atmel.avrdbg.tool.avrdragon</ToolType>
+      <ToolName>AVR Dragon</ToolName>
+      <ToolNumber>00A200034116</ToolNumber>
+      <Channel>
+        <host>127.0.0.1</host>
+        <port>56934</port>
+        <ssl>False</ssl>
+      </Channel>
+      <ToolOptions>
+        <InterfaceName>JTAG</InterfaceName>
+        <InterfaceProperties>
+          <JtagDbgClock>0</JtagDbgClock>
+          <JtagProgClock>1000000</JtagProgClock>
+          <IspClock>150000</IspClock>
+          <JtagInChain>false</JtagInChain>
+          <JtagEnableExtResetOnStartSession>false</JtagEnableExtResetOnStartSession>
+          <JtagDevicesBefore>0</JtagDevicesBefore>
+          <JtagDevicesAfter>0</JtagDevicesAfter>
+          <JtagInstrBitsBefore>0</JtagInstrBitsBefore>
+          <JtagInstrBitsAfter>0</JtagInstrBitsAfter>
+        </InterfaceProperties>
+      </ToolOptions>
+    </com_atmel_avrdbg_tool_avrdragon>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <BootSegment>2</BootSegment>
+    <AsfFrameworkConfig>
+      <framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.10.1" />
+        </dependencies>
+      </framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <AvrGcc>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+            <Value>libprintf_flt</Value>
+            <Value>libscanf_flt</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+      </AvrGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <AvrGcc>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+        <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>True</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
+        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>True</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
+        <avrgcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>F_CPU=32000000UL</Value>
+          </ListValues>
+        </avrgcc.compiler.symbols.DefSymbols>
+        <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
+        <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
+        <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
+        <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.linker.general.UseVprintfLibrary>True</avrgcc.linker.general.UseVprintfLibrary>
+        <avrgcc.linker.libraries.Libraries>
+          <ListValues>
+            <Value>libm</Value>
+            <Value>libprintf_flt</Value>
+            <Value>libscanf_flt</Value>
+          </ListValues>
+        </avrgcc.linker.libraries.Libraries>
+        <avrgcc.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcc.assembler.debugging.DebugLevel>
+      </AvrGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="avr_compiler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\can.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\can.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\declarations.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\MCP2515.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\MCP2515.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can\MCP2515define.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can_data.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CAN_Queue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="CAN_Queue.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can_spi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Controller_def.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menus.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menus.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="menus_def.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="rotor controller.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\byteordering.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\byteordering.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\fat.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\fat.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\fat_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\partition.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\partition.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\partition_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\sd-reader_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\sd_raw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\sd_raw.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\sd_raw_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\chessengine.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_bitmap.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_circle.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_clip.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_api.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_api_16gr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_attiny85_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_common.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_fast_parallel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_hw_usart_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_no_en_parallel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_parallel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_port_d_wr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_ssd_i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_st7920_custom.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_st7920_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_st7920_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_std_sw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_sw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_t6963.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_arduino_uc_i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_atmega_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_atmega_parallel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_atmega_st7920_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_atmega_st7920_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_atmega_sw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_io.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_null.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_raspberrypi_hw_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_com_raspberrypi_ssd_i2c.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_cursor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_delay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_a2_micro_printer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_flipdisc_2x7.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_gprof.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ht1632.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ili9325d_320x240.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ks0108_128x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_lc7981_160x80.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_lc7981_240x128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_lc7981_240x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_lc7981_320x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ld7032_60x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_null.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_pcd8544_84x48.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_pcf8812_96x65.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_sbn1661_122x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1306_128x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1306_128x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1309_128x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1322_nhd31oled_bw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1322_nhd31oled_gr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1325_nhd27oled_bw.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1325_nhd27oled_bw_new.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1325_nhd27oled_gr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1325_nhd27oled_gr_new.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1327_96x96_gr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_ssd1351_128x128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_64128n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_dogm128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_dogm132.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_lm6059.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_lm6063.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_nhd_c12832.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7565_nhd_c12864.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7687_c144mvgd.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7920_128x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7920_192x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_st7920_202x32.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_t6963_128x128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_t6963_128x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_t6963_240x128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_t6963_240x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_tls8204_84x48.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1601_c128032.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1608_240x128.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1608_240x64.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1610_dogxl160.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1611_dogm240.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1611_dogxl240.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1701_dogs102.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_dev_uc1701_mini12864.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_ellipse.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03b.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03bn.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_03r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_04b_24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_10x20.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_10x20r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_10x20_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_10x20_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_10x20_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_4x6.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_4x6r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_5x7.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_5x7r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_5x8.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_5x8r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x12_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x12_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x12_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13O.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13Or.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_6x13_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13O.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13Or.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x13_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x14B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x14Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_7x14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13O.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13Or.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_8x13_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x15_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18B.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18Br.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_9x18_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_baby.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_babyn.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_babyr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_blipfest_07.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_blipfest_07n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_blipfest_07r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_chikita.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_chikitan.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_chikitar.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courb4n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_courr24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_cu12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_cu12_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_cu12_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_cursor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_cursorr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fixed_v0.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fixed_v0n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fixed_v0r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_freedoomr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_freedoomr25n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub11n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub11r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub14n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub17.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub17n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub17r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub20.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub20n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub20r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub25.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub25n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub25r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub30.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub30n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub30r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub35n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub42n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fub49n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur11n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur11r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur14n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur17.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur17n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur17r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur20.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur20n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur20r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur25.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur25n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur25r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur30.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur30n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur30r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur35n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur42n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_fur49n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb11n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb11r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb12n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb14n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb17.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb17n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb17r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb20.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb20n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb20r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb25.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb25n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb25r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb30.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb30n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdb30r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr10n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr11n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr11r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr12n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr14n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr17.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr17n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr17r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr20.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr20n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr20r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr25.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr25n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr25r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr30.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr30n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr30r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr9.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr9n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_gdr9r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb08n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb10n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb12n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb14n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb18n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvb24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_helvr24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_lucasfont_alternate.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_lucasfont_alternaten.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_lucasfont_alternater.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_m2icon_5.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_m2icon_7.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_m2icon_9.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_micro.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenb24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_ncenr24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_orgv01.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_orgv01n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_orgv01r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb18n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb21.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb21n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb21r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb26.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb26n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb26r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb29.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb29n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb29r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb35.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb35n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osb35r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr18n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr21.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr21n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr21r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr26.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr26n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr26r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr29.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr29n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr29r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr35.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr35n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_osr35r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_p01type.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_p01typen.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_p01typer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_pixelle_micro.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_pixelle_micron.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_pixelle_micror.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont11.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont11r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont15.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont15r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont17.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont17r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont22.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont22r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont29.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_profont29r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_robot_de_niro.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_robot_de_niron.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_robot_de_niror.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_symb24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timb24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr08.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr08r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr10.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr10r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr12.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr12r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr14.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr14r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr18.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr18r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr24n.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_timr24r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpss.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpssb.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpssbn.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpssbr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpssn.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_tpssr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_trixel_square.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_trixel_squaren.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_trixel_squarer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_u8glib_4.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_u8glib_4r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifontr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_0_8.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_12_13.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_18_19.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_2_3.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_4_5.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_67_75.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_72_73.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_75r.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_76.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_77.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_78_79.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_86.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_font_unifont_8_9.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_line.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_ll_api.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_page.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb14v1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb16h1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb16h2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb16v1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb16v2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb32h1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8h1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8h1f.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8h2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8h8.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8v1.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pb8v2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pbxh16.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_pbxh24.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_polygon.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_rect.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_rot.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_scale.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_state.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_u16toa.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_u8toa.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="u8g\u8g_virtual_screen.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="yeasu\ft-857d.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="yeasu\FT-857D.h">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="can" />
+    <Folder Include="morse" />
+    <Folder Include="yeasu" />
+    <Folder Include="sdcard" />
+    <Folder Include="u8g" />
+    <Folder Include="u8g\test\" />
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
