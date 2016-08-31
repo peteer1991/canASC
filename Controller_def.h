@@ -26,7 +26,7 @@ typedef struct
 	int radio_rs232;
 	int rs232_prescale;
 	char * model;
-	int band;
+	uint32_t band;
 	int meter;
 	int enable;
 	int ptt;
@@ -52,7 +52,7 @@ typedef struct
 
 typedef struct
 {
-	int band;
+	uint32_t band;
 	int ptt;
 	int amp_id;
 	int tx_ready;

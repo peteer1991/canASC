@@ -36,7 +36,7 @@ void setup_timmer()
 {
 	// read timmer for radio timeout
 	TCC0.CNT = 0;// Zeroise count
-	TCC0.PER = 9000; //Period
+	TCC0.PER = 80000; //Period
 	TCC0.CTRLA = TC_CLKSEL_DIV1024_gc; //Divider
 	TCC0.INTCTRLA = TC_OVFINTLVL_LO_gc; //Liow level interrupt
 	TCC0.INTFLAGS = 0x01; // clear any initial interrupt flags
@@ -162,26 +162,27 @@ unsigned char * to_bcd_be( unsigned char bcd_data[], unsigned long  freq, unsign
 }
 
 
+int Reissue_command =0; /** fix for some logprogram theat put pakets to fast*/
 ISR(USARTD0_RXC_vect)
 {
 	char test1a =USARTD0_DATA;
 	yeasu_read[number_of_readed_byte] = test1a;
 	number_of_readed_byte++;
 	
-	if(number_of_readed_byte >=5)
+	if(number_of_readed_byte >4)
 	{
 		number_of_readed_byte =0;
+		Reissue_command=0;
 		// copy the message to the from yeasy yx
 		switch(cat_message_type)
 		{
 			case CAT_READ_FREQ_MODE:
-			// Decode the freqvensy from radio
-			rs232radio.freqvensy = from_bcd_be(yeasu_read, 8);
-			rs232radio.radio_mode = yeasu_read[4];
-			break;
-			
+				// Decode the freqvensy from radio
+				rs232radio.freqvensy = from_bcd_be(yeasu_read, 8);
+				rs232radio.radio_mode = yeasu_read[4];
+				break;
 			default:
-			break;
+				break;
 			
 		}
 
@@ -191,7 +192,6 @@ ISR(USARTD0_RXC_vect)
 
 }
 
-
 ISR(USARTC0_RXC_vect)
 {
 	char rx_data = USARTC0_DATA;
@@ -199,21 +199,26 @@ ISR(USARTC0_RXC_vect)
 	pc_read[number_of_transmitted_byte_pc] = rx_data;
 	
 	number_of_transmitted_byte_pc++;
+
 	
 	if(number_of_transmitted_byte_pc >4)
 	{
 		number_of_transmitted_byte_pc =0;
-		switch(pc_read[4])
+		
+		if(Reissue_command == 0)
 		{
-			case CAT_RX_FREQ_CMD:
-			cat_message_type= CAT_READ_FREQ_MODE;
-			
-			number_of_readed_byte =0;
-			break;
-			default:
-			cat_message_type =0;
-			number_of_readed_byte =0;
-			break;
+			Reissue_command=1;
+			switch(pc_read[4])
+			{
+				case CAT_RX_FREQ_CMD:
+					cat_message_type= CAT_READ_FREQ_MODE;
+					number_of_readed_byte=0;
+					break;
+				default:
+					cat_message_type =0;
+					//number_of_readed_byte =0;
+				break;
+			}
 		}
 		
 	}
@@ -261,5 +266,4 @@ ISR(TCC0_OVF_vect)
 	}
 	
 	count_active_temp =count_active;
-
 }

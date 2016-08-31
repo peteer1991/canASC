@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include "can/can.h"
 #include "can/MCP2515.h"
 #include "sdcard_driver.h"
@@ -61,6 +62,7 @@ void send_tx_message(int unit);
 // New can message
 int new_can_message =0;
 rs232message message_que;
+
 
 
 
@@ -138,6 +140,7 @@ void setup()
 	//uarts
 	setUpSerial_rpt();
 	setUpSerial_main();
+
 }
 
 // alert led toogle functions
@@ -769,7 +772,7 @@ void setUpSerial_rpt()
 	PORTC_DIRSET = PIN3_bm; //TX pin as output
 	PORTC_OUTCLR = PIN2_bm;
 	PORTC_DIRCLR = PIN2_bm; //PC2 as RX	
-
+	bool twoStopBits =1;
     // Baud rate selection
     // BSEL = (32000000 / (2^0 * 16*9600) -1 = 207.333 -> BSCALE = 0
     // FBAUD = ( (32000000)/(2^0*16(207+1)) = 9615.384 -> it's alright
@@ -777,8 +780,8 @@ void setUpSerial_rpt()
     USARTC0_BAUDCTRLB = rs232radio.rs232_prescale; //Just to be sure that BSCALE is 0
     USARTC0_BAUDCTRLA = rs232radio.radio_rs232; // 207
      
-    //8 data bits, no parity and 1 stop bit 
-    USARTC0_CTRLC = USART_CHSIZE_8BIT_gc;
+    //8 data bits, no parity and 2 stop bit 
+    USARTC0_CTRLC = USART_CHSIZE_8BIT_gc |(twoStopBits ? USART_SBMODE_bm : 0);
      
     //Enable receive and transmit
     USARTC0_CTRLB = USART_TXEN_bm | USART_RXEN_bm; // And enable high speed mode
@@ -801,8 +804,8 @@ void setUpSerial_rpt()
      
      
     
-	//8 data bits, no parity and 1 stop bit 
-    USARTD0_CTRLC = USART_CHSIZE_8BIT_gc;
+	//8 data bits, no parity and 2 stop bit 
+    USARTD0_CTRLC = USART_CHSIZE_8BIT_gc | (twoStopBits ? USART_SBMODE_bm : 0);
      
     //Enable receive and transmit
     USARTD0_CTRLB = USART_TXEN_bm | USART_RXEN_bm; // And enable high speed mode
