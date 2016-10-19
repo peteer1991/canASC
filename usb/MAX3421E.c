@@ -5,10 +5,38 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#define _MAX3421E_C_
+#include <avr/pgmspace.h>
 
+#define _MAX3421E_C_
 #include "project_config.h"
 #include "MAX3421E.h"
+
+#define pinToRegister(P) ( pgm_read_byte( pin_to_register_PGM + (P) ) )
+#define pinToBitMask(P) ( pgm_read_byte( pin_to_bit_mask_PGM + (P) ) )
+
+
+const uint8_t PROGMEM   pin_to_register_PGM[] = {
+	rIOPINS1, /* 0 */
+	rIOPINS1,
+	rIOPINS1,
+	rIOPINS1,
+	rIOPINS2, /* 4 */
+	rIOPINS2,
+	rIOPINS2,
+	rIOPINS2,
+};
+
+const uint8_t PROGMEM   pin_to_bit_mask_PGM[] = {
+	_BV(0), /* rIOPINS1 */
+	_BV(1),
+	_BV(2),
+	_BV(3),
+	_BV(0), /* rIOPINS2 */
+	_BV(1),
+	_BV(2),
+	_BV(3),
+};
+
 
 /* variables and data structures */
 
@@ -266,4 +294,51 @@ void MaxGpxHandler( void )
 
     GPINIRQ = MAXreg_rd( rGPINIRQ );            //read both IRQ registers
 */
+}
+
+void Max_write(char pin, char val) {
+    //TODO: Find a better way to do this comparison
+    if (pin < 8) {
+        // process only if the pin is less than 8
+
+        uint8_t bit = pinToBitMask(pin);
+        uint8_t reg = pinToRegister(pin);
+        uint8_t out = MAXreg_rd(reg);
+        
+        if (val == 0) {
+            out &= ~bit;
+        } else {
+            out |= bit;
+        }
+
+        MAXreg_wr(reg, out);
+    } else {
+        //Serial.print(pin);Serial.println(" not a pin");
+    }
+}
+
+/**
+ * Read is performed by calling the regRd function of the USB class
+ *
+ * @todo Find a better way to check if pin is 0<= pin <= 7
+ */
+char Max_read(char pin) {
+
+    //TODO: Find a better way to do this comparison
+    if (pin < 8) {
+        // process only if the pin is less than 8
+
+        uint8_t bit = pinToBitMask(pin);
+        uint8_t reg = pinToRegister(pin);
+        uint8_t out = MAXreg_rd(reg);
+        
+        if (out & bit) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        //Serial.print(pin);Serial.println(" not a pin");
+        return 0;
+    }
 }

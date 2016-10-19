@@ -25,6 +25,8 @@
 #include "u8g/u8g.h"
 #include "CAN_Queue.h"
 #include "yeasu/FT-857D.h"
+#include "io_driver.h"
+
 
 
 u8g_t u8g;
@@ -35,7 +37,7 @@ void setClockTo32MHz();
 static int uart_putchar (char c, FILE *stream);
 int uart_getchar(FILE *stream);
 FILE usart_str = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
-
+extern char key_pressed;
 radio rs232radio;
 Amp	amplifier;
 
@@ -86,6 +88,7 @@ void setup()
 	PORTH.DIRCLR    =    PIN5_bm;
 	PORTH.PIN5CTRL  =    PORT_OPC_PULLUP_gc;
 	PORTA.PIN5CTRL  =    PORT_OPC_PULLDOWN_gc;
+	setup_buttons(); //*burrons config *//
 	
 	
 	 // interupt rotary encoder
@@ -143,15 +146,6 @@ void setup()
 
 }
 
-// alert led toogle functions
-void toogle_alert()
-{
-	PORTK.OUTSET = PIN7_bm;
-}
-void clear_alert()
-{
-	PORTK.OUTCLR = PIN7_bm;
-}
 
 // set pll to 32mhz
 void setClockTo32MHz(){
@@ -182,10 +176,12 @@ void setClockTo32MHz(){
 
 }
 
+
 int y_pos = 0;  // global variable
 char * test[23];
 int main(void)
 {	
+	
 	rs232radio.enable = 0;
 	rs232radio.rs232_prescale=0;
 	rs232radio.radio_rs232 = 206;
@@ -207,6 +203,8 @@ int main(void)
 	printf("Done!\n");
 
 	_delay_ms(500);
+	// USB HOST 
+	
 
 
 	// sd_file_new(filename);
@@ -229,7 +227,8 @@ int main(void)
 	can_message_t  Rxmsg;
 	//can_message_t  TXmsg;
 	setUpSerial_rpt();
-	
+
+
 	int ptt_test =0;
 	
 	
@@ -253,16 +252,26 @@ int main(void)
 // 		  }
 	
  int send_counter=0;
- for(;;)		
-  {  
+ main_setup();
+
+ for(;;)	
+ {
+
+ 
 	//CAN_data_receive(&Rxmsg);			
 		CAN_data_receive(&Rxmsg);
 		if (Rxmsg.data[0] !=128)
 		{
 			//printf("fwd %i \n",Rxmsg.data[0]);
 		}
+		main_usb ();
+		if (key_pressed == '1')
+		{
+			beep(30);
+		}
 		
-		if ( rs232radio.ptt == 1 || Select_buttion() == 1)
+		
+		if ( rs232radio.ptt == 1 || Select_buttion() == 1 || key_pressed == '*')
 		{
 
 			rs232radio.amp_id =2;
@@ -289,6 +298,7 @@ int main(void)
 		}
 		else
 		{
+
 			if (ptt_test == 1)
 			{
 				send_stoptx_message(2);					
@@ -300,6 +310,10 @@ int main(void)
 			{
 				// main screen process
 				main_screen();
+				
+
+					
+				
 				if (send_counter > 10)
 				{
 					send_data_to_pi();
@@ -307,7 +321,8 @@ int main(void)
 					send_counter =0;
 				}
 				send_counter++;
-
+			
+			
 				
 			}
 			else
@@ -320,6 +335,9 @@ int main(void)
   }
    
 }
+
+
+
 /** Send a mode pacet for pi i band*/ 
 void send_data_to_pi()
 {
@@ -433,6 +451,18 @@ void trasmit_slide()
 			
 			sprintf(text,"SWR : 1:%.03f ",swr);
 			u8g_DrawStr(&u8g,1,54 ,text);
+			
+			if(rs232radio.meter == 1)
+			{
+				sprintf(text, "%dM", rs232radio.band);
+				u8g_DrawStr(&u8g, 110, 54,text );
+
+			}else
+			{
+				sprintf(text, "%dcM", rs232radio.band);
+				u8g_DrawStr(&u8g, 110, 54,text );
+			}
+			
 					
 		} while ( u8g_NextPage(&u8g) );
 	
@@ -461,48 +491,7 @@ void screen_int()
 int max_antennas =7;
 int meny_selected =0;
 
-int Select_buttion()
-{
-	int ret =0;
-	if((PORTH.IN & PIN7_bm) ==0 )
-	{
-	 ret =1;
-	}
-	
-	return ret;
-}
-// kollar knappens status
-int buttion_one()
-{
-		int ret =0;
-		if((PORTH.IN & PIN2_bm) ==0 )
-		{
-			ret =1;
-		}
-		
-		return ret;
-}
 
-int buttion_two()
-{
-	int ret =0;
-	if((PORTH.IN & PIN3_bm) ==0 )
-	{
-		ret =1;
-	}
-	
-	return ret;
-}
-int Radio_ptt()
-{
-	int ret =0;
-	if((PORTA.IN & PIN7_bm) ==0 )
-	{
-		ret =1;
-	}
-	
-	return ret;
-}
 
 
 
@@ -552,6 +541,7 @@ void main_screen()
 	  u8g_SetFontRefHeightText(&u8g);
 	  u8g_SetFontPosTop(&u8g);
 	  get_band();
+	  button_test();
 	  
 	  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
 	  

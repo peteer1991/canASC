@@ -196,8 +196,8 @@ BYTE XferDispatchPkt( BYTE token, BYTE ep )
 BYTE XferInTransfer( BYTE addr/* not sure if it's necessary */, BYTE ep, WORD nbytes, char* data, BYTE maxpktsize )
 {
  BYTE rcode;
- BYTE i;
- BYTE tmpbyte;
+ //BYTE i;
+ //BYTE tmpbyte;
  BYTE pktsize;
  WORD xfrlen = 0;
     MAXreg_wr( rHCTL, devtable[ addr ].epinfo[ ep ].rcvToggle );    //set toggle value

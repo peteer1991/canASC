@@ -17,9 +17,8 @@ void SPI_init()
 {
 	PORTD.DIRSET = 0xB0;  // configure MOSI, SS, CLK as outputs on PORTE
 	PORTD.OUTSET =PIN4_bm;
-	
 	// enable SPI master mode, CLK/64 (@32MHz=>500KHz)
-	SPID.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm | SPI_MODE_0_gc | SPI_PRESCALER_DIV128_gc;
+	SPID.CTRL = SPI_ENABLE_bm | SPI_MASTER_bm | SPI_MODE_0_gc | SPI_PRESCALER_DIV64_gc;
 	
 
 }

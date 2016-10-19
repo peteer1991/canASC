@@ -231,6 +231,8 @@
 #define MODE_LS_HOST	(bmDPPULLDN|bmDMPULLDN|bmHOST|bmLOWSPEED|bmSOFKAENAB)
 
 
+#define _BV(bit) (1 << (bit))
+
 /* MAX3421E.c function prototypes	*/
 void SPI_init_usb();
 BYTE SPI_wr( BYTE data );
@@ -245,6 +247,10 @@ void MAX3421E_Task( void );
 void MaxIntHandler( void );
 void MaxGpxHandler( void );
 void Deselect_MAX3421E();
+char* MAXbytes_rd ( BYTE reg, BYTE nbytes, char* data );
+BYTE MAXreg_rd( BYTE reg );
+void MAXreg_wr(BYTE reg, BYTE val);
+void Max_write(char pin, char val);
 
 #endif //_MAX3421E_H_
 

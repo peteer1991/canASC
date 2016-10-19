@@ -177,6 +177,15 @@
     <Compile Include="Controller_def.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="io_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="io_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="kdb.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="menus.c">
       <SubType>compile</SubType>
     </Compile>
@@ -205,6 +214,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sdcard\fat_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sdcard\io_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sdcard\partition.c">
@@ -1740,6 +1752,42 @@
     <Compile Include="u8g\u8g_virtual_screen.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="usb\GenericMacros.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\GenericTypeDefs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\HID.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\HID.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\USBhost.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\MAX3421E.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\MAX3421E.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\project_config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\transfer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\transfer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\USB.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="usb\usb_ch9.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="yeasu\ft-857d.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1750,10 +1798,16 @@
   <ItemGroup>
     <Folder Include="can" />
     <Folder Include="morse" />
+    <Folder Include="usb" />
     <Folder Include="yeasu" />
     <Folder Include="sdcard" />
     <Folder Include="u8g" />
     <Folder Include="u8g\test\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="qsl.psd">
+      <SubType>compile</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

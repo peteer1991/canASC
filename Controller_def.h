@@ -36,7 +36,7 @@ typedef struct
 	long freqvensy;
 	int radio_mode;
 	char * mode;
-
+	int s_level;
 }radio;
 
 typedef struct

@@ -6,6 +6,7 @@
  */
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <util/delay.h>
 
 #include "io_driver.h";
 
@@ -171,4 +172,17 @@ void toogle_alert()
 void clear_alert()
 {
 	PORTK.OUTCLR = PIN7_bm;
+}
+/** Generates pezoo beep */
+void beep(int duration )
+{
+	/** tone 1 khz*/
+	for (int i =0;i< duration; i++)
+	{
+		Max_write( 0,  1);
+		_delay_ms(1);
+		Max_write( 0, 0);
+		_delay_ms(1);
+	}
+
 }

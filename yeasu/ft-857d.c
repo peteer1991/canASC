@@ -264,6 +264,6 @@ ISR(TCC0_OVF_vect)
 		}
 		
 	}
-	
+	update_uptime();
 	count_active_temp =count_active;
 }
