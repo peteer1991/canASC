@@ -26,6 +26,7 @@
 #include "CAN_Queue.h"
 #include "yeasu/FT-857D.h"
 #include "io_driver.h"
+#include "Sequencer.h"
 
 
 
@@ -87,9 +88,9 @@ void setup()
 	PORTH.PIN4CTRL  =    PORT_OPC_PULLUP_gc;
 	PORTH.DIRCLR    =    PIN5_bm;
 	PORTH.PIN5CTRL  =    PORT_OPC_PULLUP_gc;
+	PORTH.DIRCLR    =    PIN4_bm;
 	PORTA.PIN5CTRL  =    PORT_OPC_PULLDOWN_gc;
 	setup_buttons(); //*burrons config *//
-	
 	
 	 // interupt rotary encoder
 	PORTH.DIR = 0x00; // Port D als Eingang
@@ -205,8 +206,6 @@ int main(void)
 	_delay_ms(500);
 	// USB HOST 
 	
-
-
 	// sd_file_new(filename);
 	// sd_file_open(filename);
 	// sd_file_write(filetext);
@@ -267,18 +266,19 @@ int main(void)
 		main_usb ();
 		if (key_pressed == '1')
 		{
-			beep(30);
+			beep(40);
 		}
 		
 		
 		if ( rs232radio.ptt == 1 || Select_buttion() == 1 || key_pressed == '*')
 		{
+			
 
-			rs232radio.amp_id =2;
 			
 			if (ptt_test ==0)
 			{
-				send_tx_message(2);
+				set_amp_id(2);
+				TX_sequens();
 				ptt_test =1;
 			}
 			
@@ -298,18 +298,26 @@ int main(void)
 		}
 		else
 		{
-
 			if (ptt_test == 1)
 			{
-				send_stoptx_message(2);					
-				ptt_test=0;
+				RX_sequens();
+				ptt_test =0;
 				
 			}
+		
+
 			/* create a Function to send CAN data and when no packet print screen */
 			if (can_queue_is_empty() == 1)
 			{
 				// main screen process
-				main_screen();
+				if (key_pressed == '2')
+				{
+					GOTO_Direction();
+				}
+				else
+				{
+					main_screen();
+				}
 				
 
 					
@@ -393,29 +401,6 @@ void send_data_on_canbus()
 	
 	_delay_ms(10);
 }
-/*
-Sending the PTT message to the system uniterupted
-*/
-void send_tx_message(int unit)
-{
-		can_message_t send;
-		send.msg_id=1;
-		send.data_length=2;
-		send.data[0]=unit;
-		send.data[1]=1;
-		CAN_message_send(&send);
-		_delay_ms(5);
-}
-void send_stoptx_message(int unit)
-{
-	can_message_t send;
-	send.msg_id=1;
-	send.data_length=2;
-	send.data[0]=unit;
-	send.data[1]=2;
-	can_queue_Enqueue(send);
-	_delay_ms(5);
-}
 
 void trasmit_slide()
 {
@@ -495,35 +480,6 @@ int meny_selected =0;
 
 
 
-void meny_selectors(struct MENU_ITEMS * menu)
-{
-	if(Select_buttion() ==1 )
-	{
-		// exikverar funtionern som finns i tabbelen 	
-
-		
-	}
-	if (buttion_one() ==1)
-	{
-		
-	}
-	
-	
-	// max_level
-	if (meny_selected <0)
-	{
-		meny_selected =(4);
-	}
-	if (meny_selected >(4))
-	{
-		meny_selected =0;
-	}
-	
-
-	
-}
-
-
 void main_screen()
 {
 	//meny_selectors(menu);
@@ -544,6 +500,16 @@ void main_screen()
 	  button_test();
 	  
 	  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
+	  
+	  if (meny_selected <0)
+	  {
+		  meny_selected=0;
+	  }
+	  if (meny_selected >4)
+	  {
+		  meny_selected =4;
+	  }
+	   
 	  
 	  for(int i=0;i <= 4; i++)
 	  {

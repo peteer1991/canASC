@@ -96,7 +96,7 @@ BOOL HIDMProbe( BYTE addr, DWORD flags )
 /* assumes single configuration, single endpoint, and interface configuration 0 */
 BOOL HIDKProbe( BYTE addr, DWORD flags )
 {
-  printf("try detecy hid keyborad\n");
+  printf("Detecting hid keyborad\n");
   BYTE tmpbyte;
   BYTE rcode;
   BYTE confvalue;

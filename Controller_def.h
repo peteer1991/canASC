@@ -12,8 +12,21 @@ typedef struct
 	int switch_id;
 	int Rotor_id;
 	int Amp_id;
-	int Power;
-} cont;
+	int Power_suply;
+	int preamp;
+	
+} seqvenser;
+
+typedef struct
+{
+	int amplifier;
+	int preamp;
+
+	
+} wait_for_struckt;
+
+
+
 
 typedef struct 
 {

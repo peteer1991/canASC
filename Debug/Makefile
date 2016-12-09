@@ -34,6 +34,7 @@ LIB_DEP:=
 SUBDIRS :=  \
 ../can \
 ../morse \
+../usb \
 ../yeasu \
 ../sdcard \
 ../u8g \
@@ -46,6 +47,7 @@ C_SRCS +=  \
 ../can/MCP2515.c \
 ../can_data.c \
 ../CAN_Queue.c \
+../io_driver.c \
 ../menus.c \
 ../rotor\ controller.c \
 ../can_spi.c \
@@ -54,6 +56,7 @@ C_SRCS +=  \
 ../sdcard/partition.c \
 ../sdcard/sd_raw.c \
 ../sdcard_driver.c \
+../Sequencer.c \
 ../u8g/chessengine.c \
 ../u8g/u8g_bitmap.c \
 ../u8g/u8g_circle.c \
@@ -555,6 +558,10 @@ C_SRCS +=  \
 ../u8g/u8g_u16toa.c \
 ../u8g/u8g_u8toa.c \
 ../u8g/u8g_virtual_screen.c \
+../usb/HID.c \
+../usb/USBhost.c \
+../usb/MAX3421E.c \
+../usb/transfer.c \
 ../yeasu/ft-857d.c
 
 
@@ -569,6 +576,7 @@ can/can.o \
 can/MCP2515.o \
 can_data.o \
 CAN_Queue.o \
+io_driver.o \
 menus.o \
 rotor\ controller.o \
 can_spi.o \
@@ -577,6 +585,7 @@ sdcard/fat.o \
 sdcard/partition.o \
 sdcard/sd_raw.o \
 sdcard_driver.o \
+Sequencer.o \
 u8g/chessengine.o \
 u8g/u8g_bitmap.o \
 u8g/u8g_circle.o \
@@ -1078,6 +1087,10 @@ u8g/u8g_state.o \
 u8g/u8g_u16toa.o \
 u8g/u8g_u8toa.o \
 u8g/u8g_virtual_screen.o \
+usb/HID.o \
+usb/USBhost.o \
+usb/MAX3421E.o \
+usb/transfer.o \
 yeasu/ft-857d.o
 
 OBJS_AS_ARGS +=  \
@@ -1085,6 +1098,7 @@ can/can.o \
 can/MCP2515.o \
 can_data.o \
 CAN_Queue.o \
+io_driver.o \
 menus.o \
 "rotor controller.o" \
 can_spi.o \
@@ -1093,6 +1107,7 @@ sdcard/fat.o \
 sdcard/partition.o \
 sdcard/sd_raw.o \
 sdcard_driver.o \
+Sequencer.o \
 u8g/chessengine.o \
 u8g/u8g_bitmap.o \
 u8g/u8g_circle.o \
@@ -1594,6 +1609,10 @@ u8g/u8g_state.o \
 u8g/u8g_u16toa.o \
 u8g/u8g_u8toa.o \
 u8g/u8g_virtual_screen.o \
+usb/HID.o \
+usb/USBhost.o \
+usb/MAX3421E.o \
+usb/transfer.o \
 yeasu/ft-857d.o
 
 C_DEPS +=  \
@@ -1601,6 +1620,7 @@ can/can.d \
 can/MCP2515.d \
 can_data.d \
 CAN_Queue.d \
+io_driver.d \
 menus.d \
 rotor\ controller.d \
 can_spi.d \
@@ -1609,6 +1629,7 @@ sdcard/fat.d \
 sdcard/partition.d \
 sdcard/sd_raw.d \
 sdcard_driver.d \
+Sequencer.d \
 u8g/chessengine.d \
 u8g/u8g_bitmap.d \
 u8g/u8g_circle.d \
@@ -2110,6 +2131,10 @@ u8g/u8g_state.d \
 u8g/u8g_u16toa.d \
 u8g/u8g_u8toa.d \
 u8g/u8g_virtual_screen.d \
+usb/HID.d \
+usb/USBhost.d \
+usb/MAX3421E.d \
+usb/transfer.d \
 yeasu/ft-857d.d
 
 C_DEPS_AS_ARGS +=  \
@@ -2117,6 +2142,7 @@ can/can.d \
 can/MCP2515.d \
 can_data.d \
 CAN_Queue.d \
+io_driver.d \
 menus.d \
 "rotor controller.d" \
 can_spi.d \
@@ -2125,6 +2151,7 @@ sdcard/fat.d \
 sdcard/partition.d \
 sdcard/sd_raw.d \
 sdcard_driver.d \
+Sequencer.d \
 u8g/chessengine.d \
 u8g/u8g_bitmap.d \
 u8g/u8g_circle.d \
@@ -2626,6 +2653,10 @@ u8g/u8g_state.d \
 u8g/u8g_u16toa.d \
 u8g/u8g_u8toa.d \
 u8g/u8g_virtual_screen.d \
+usb/HID.d \
+usb/USBhost.d \
+usb/MAX3421E.d \
+usb/transfer.d \
 yeasu/ft-857d.d
 
 OUTPUT_FILE_PATH +=rotor\ controller.elf
@@ -2661,6 +2692,13 @@ can/MCP2515.o: ../can/MCP2515.c
 	
 
 ./CAN_Queue.o: .././CAN_Queue.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./io_driver.o: .././io_driver.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -2717,6 +2755,13 @@ sdcard/sd_raw.o: ../sdcard/sd_raw.c
 	
 
 ./sdcard_driver.o: .././sdcard_driver.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./Sequencer.o: .././Sequencer.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -6230,6 +6275,34 @@ u8g/u8g_virtual_screen.o: ../u8g/u8g_virtual_screen.c
 	@echo Finished building: $<
 	
 
+usb/HID.o: ../usb/HID.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+usb/USBhost.o: ../usb/USBhost.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+usb/MAX3421E.o: ../usb/MAX3421E.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+usb/transfer.o: ../usb/transfer.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 yeasu/ft-857d.o: ../yeasu/ft-857d.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
@@ -6260,6 +6333,13 @@ sdcard/%.o: ../sdcard/%.c
 	
 
 u8g/%.o: ../u8g/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+usb/%.o: ../usb/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

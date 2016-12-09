@@ -126,8 +126,8 @@ void testKbd( BYTE addr )
 	rcode = XferGetIdle( addr, 0, hid_device.interface, 0, &tmpbyte );
 	rcode = XferGetProto( addr, 0, hid_device.interface, &tmpbyte );
 	if( rcode ) {   //error handling
-		printf("\r\nGetProto Error. Error code ");
-		printf( "%i",rcode );
+		//printf("\r\nGetProto Error. Error code ");
+		//printf( "%i",rcode );
 	}
 	//delay = uptime + 5;
 	//while( uptime < delay );    //wait polling interval
@@ -148,7 +148,11 @@ void testKbd( BYTE addr )
 			//                send_hexbyte( kbdbuf.keycode[ i ] );
 			char print_char= HIDtoa( &kbdbuf,i );
 			if(print_char != 0x07)
-				printf("%c", print_char);
+			{
+				//printf("%c", print_char);
+				key_pressed = print_char;	
+			}
+				
 			//                send_string( crlf );
 			switch(print_char)
 			{
@@ -162,7 +166,7 @@ void testKbd( BYTE addr )
 					break;
 					
 			}
-			key_pressed = print_char;
+			
 		}
 		memcpy(( char* )&localbuf, ( const  char* )&kbdbuf, sizeof( BOOT_KBD_REPORT )); 
 	}

@@ -189,9 +189,6 @@
     <Compile Include="menus.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="menus.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="menus_def.h">
       <SubType>compile</SubType>
     </Compile>
@@ -244,6 +241,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="sdcard_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Sequencer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Sequencer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="u8g\chessengine.c">
@@ -1755,9 +1758,6 @@
     <Compile Include="usb\GenericMacros.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="usb\GenericTypeDefs.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="usb\HID.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1803,11 +1803,6 @@
     <Folder Include="sdcard" />
     <Folder Include="u8g" />
     <Folder Include="u8g\test\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="qsl.psd">
-      <SubType>compile</SubType>
-    </None>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

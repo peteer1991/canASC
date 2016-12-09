@@ -347,7 +347,7 @@ void USB_Task( void )
         case( USB_STATE_CONFIGURING ):              //checking for driver
             /* run device class probes until one returns TRUE    */
             for( i = 0; i < USB_NUMCLASSES; i++ ) {
-				printf("class = %i \n ",tmp_addr);
+				//printf("class = %i \n ",tmp_addr);
                 rcode = ClientDriverTable[ i ].Initialize( tmp_addr, 0 );
                 if( rcode == TRUE ) {
 			        usb_task_state = USB_STATE_RUNNING;  

@@ -10,7 +10,7 @@
 #include <avr/pgmspace.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "menus.h"
+
 #include "menus_def.h"
 void MAIN_INFO_F();
 void MAIN_AMPS_F();
@@ -22,6 +22,7 @@ void SETINGS_RADIO_F();
 void SETINGS_PC_F();
 void SETINGS_CAN_F();
 void SETINGS_BACK_F();
+#include "u8g/u8g.h"
 extern u8g_t u8g;
 extern int rad_test;
 extern int meny_selected;
@@ -37,6 +38,7 @@ extern int count_sw();
 extern void draw_angel_circle();
 extern int count_amp();
 extern void clear_alert();
+
 
 
 
@@ -70,26 +72,7 @@ void GOTO_Direction()
 {
 	int meny_saved =meny_selected;
 	meny_selected = rad_test;
-	
-	// catch one 
-	while(buttion_one() == 1)
-	{
-		_delay_ms(2);
-	}
 
-	while(Select_buttion() == 0)
-	{	
-		rad_test =meny_selected;
-		
-		if(buttion_one() == 1)
-		{
-			meny_selected=meny_selected-5;
-		}
-		if (buttion_two() == 1)
-		{
-			meny_selected=meny_selected+5;
-		}
-		
 		
 		// 360 deg fix
 		if(meny_selected > 360)
@@ -107,7 +90,7 @@ void GOTO_Direction()
  
 		} while ( u8g_NextPage(&u8g) );
 		
-	}
+	
 	
 	meny_selected =meny_saved; 
 	

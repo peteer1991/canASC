@@ -10,6 +10,8 @@ can_data.c
 
 CAN_Queue.c
 
+io_driver.c
+
 menus.c
 
 rotor controller.c
@@ -25,6 +27,8 @@ sdcard\partition.c
 sdcard\sd_raw.c
 
 sdcard_driver.c
+
+Sequencer.c
 
 u8g\chessengine.c
 
@@ -1027,6 +1031,14 @@ u8g\u8g_u16toa.c
 u8g\u8g_u8toa.c
 
 u8g\u8g_virtual_screen.c
+
+usb\HID.c
+
+usb\USBhost.c
+
+usb\MAX3421E.c
+
+usb\transfer.c
 
 yeasu\ft-857d.c
 
