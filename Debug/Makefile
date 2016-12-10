@@ -51,6 +51,7 @@ C_SRCS +=  \
 ../menus.c \
 ../rotor\ controller.c \
 ../can_spi.c \
+../scheduler.c \
 ../sdcard/byteordering.c \
 ../sdcard/fat.c \
 ../sdcard/partition.c \
@@ -580,6 +581,7 @@ io_driver.o \
 menus.o \
 rotor\ controller.o \
 can_spi.o \
+scheduler.o \
 sdcard/byteordering.o \
 sdcard/fat.o \
 sdcard/partition.o \
@@ -1102,6 +1104,7 @@ io_driver.o \
 menus.o \
 "rotor controller.o" \
 can_spi.o \
+scheduler.o \
 sdcard/byteordering.o \
 sdcard/fat.o \
 sdcard/partition.o \
@@ -1624,6 +1627,7 @@ io_driver.d \
 menus.d \
 rotor\ controller.d \
 can_spi.d \
+scheduler.d \
 sdcard/byteordering.d \
 sdcard/fat.d \
 sdcard/partition.d \
@@ -2146,6 +2150,7 @@ io_driver.d \
 menus.d \
 "rotor controller.d" \
 can_spi.d \
+scheduler.d \
 sdcard/byteordering.d \
 sdcard/fat.d \
 sdcard/partition.d \
@@ -2720,6 +2725,13 @@ can/MCP2515.o: ../can/MCP2515.c
 	
 
 ./can_spi.o: .././can_spi.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./scheduler.o: .././scheduler.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 4.8.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1056\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DF_CPU=32000000UL  -O1 -fdata-sections -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atxmega64a1 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

@@ -159,11 +159,13 @@ void CAN_data_receive(can_message_t* msg) {
         for(i = 0; i < 8; i++){
                 msg->data[i] = 0;
         }
+
         msg->msg_id = mcp2515_read(MCP_RXB0SIDH);
 		
 		
 		char val;
 		val = mcp2515_read(MCP2515_RXB0EID0);
+
 		if (msg->msg_id ==0)
 		{
 			 msg->msg_id  = (msg->msg_id  << 8) | val;

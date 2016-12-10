@@ -41,10 +41,6 @@ extern void clear_alert();
 
 
 
-
-
-
-
 void execute_function(int i)
 {
 	//men->Trigger_function[i](men);

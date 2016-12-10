@@ -18,6 +18,8 @@ rotor controller.c
 
 can_spi.c
 
+scheduler.c
+
 sdcard\byteordering.c
 
 sdcard\fat.c

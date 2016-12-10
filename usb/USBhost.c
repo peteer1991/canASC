@@ -5,9 +5,11 @@
 #include <string.h>
 
 #include "project_config.h"
+#include "USBhost.h"
 
 extern HID_DEVICE hid_device;
 extern DEV_RECORD devtable[];
+
 
 /* Global variables  */
 volatile DWORD uptime = 0;                      //system uptime. Gets updated every millisecond
@@ -144,14 +146,16 @@ void testKbd( BYTE addr )
 		if( kbdbuf.keycode[ i ] == 0 ) {        //empty position means it and all subsequent positions are empty
 			break;
 		}
+	
 		if( prevCodeComp( kbdbuf.keycode[ i ], &localbuf ) == FALSE ) {
 			//                send_hexbyte( kbdbuf.keycode[ i ] );
 			char print_char= HIDtoa( &kbdbuf,i );
 			if(print_char != 0x07)
 			{
 				//printf("%c", print_char);
-				key_pressed = print_char;	
+					
 			}
+			key_pressed = print_char;
 				
 			//                send_string( crlf );
 			switch(print_char)

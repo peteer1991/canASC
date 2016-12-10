@@ -28,7 +28,7 @@ rotor controller.d rotor controller.o: .././rotor\ controller.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  .././Controller_def.h .././sdcard/sd_raw.h .././sdcard/sd_raw_config.h \
  .././u8g/u8g.h .././CAN_Queue.h .././yeasu/FT-857D.h .././io_driver.h \
- .././Sequencer.h
+ .././Sequencer.h .././usb/USBhost.h .././scheduler.h
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 
@@ -105,3 +105,7 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-g
 .././io_driver.h:
 
 .././Sequencer.h:
+
+.././usb/USBhost.h:
+
+.././scheduler.h:

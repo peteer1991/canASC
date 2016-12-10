@@ -51,3 +51,4 @@ void button_test();
 // alert led toogle functions
 void toogle_alert();
 void clear_alert();
+void beep(int duration );

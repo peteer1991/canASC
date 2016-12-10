@@ -27,6 +27,8 @@
 #include "yeasu/FT-857D.h"
 #include "io_driver.h"
 #include "Sequencer.h"
+#include "usb/USBhost.h"
+#include "scheduler.h"
 
 
 
@@ -64,15 +66,11 @@ void send_tx_message(int unit);
 
 // New can message
 int new_can_message =0;
-rs232message message_que;
-
-
 
 
 void setup()
 {
-	message_que.out_tx[0] =0xFF;
-	message_que.out_tx[1] =0xFF;
+
 	//toogle_alert();
 	setClockTo32MHz();
 	// set direcotion of lcd
@@ -92,7 +90,10 @@ void setup()
 	PORTA.PIN5CTRL  =    PORT_OPC_PULLDOWN_gc;
 	setup_buttons(); //*burrons config *//
 	
-	 // interupt rotary encoder
+	// port D setup interupt
+	PORTD.DIRCLR    =    PIN1_bm;
+	
+	// interupt rotary encoder
 	PORTH.DIR = 0x00; // Port D als Eingang
     PORTH.PIN0CTRL = PORT_OPC_PULLUP_gc | PORT_ISC_RISING_gc;// PD0: Pull up, erkenne Rising Edge
 	PORTH.PIN1CTRL = PORT_OPC_PULLUP_gc | PORT_ISC_RISING_gc;// PD0: Pull up, erkenne Rising Edge
@@ -149,7 +150,8 @@ void setup()
 
 
 // set pll to 32mhz
-void setClockTo32MHz(){
+void setClockTo32MHz()
+{
 	
 	// 	CCP = CCP_IOREG_gc;              // disable register security for oscillator update
 	// 	OSC.CTRL = OSC_RC32MEN_bm;       // enable 32MHz oscillator
@@ -176,13 +178,152 @@ void setClockTo32MHz(){
 
 
 }
+// global for all tasks 
+
+int ptt_test =0;
+void Main_task(void);
+void read_usb_Task(void);
+void Send_can_Task(void);
+void Send_can_heartbeat(void);
+void Recive_data_from_can(void);
+
+
+void Setup_main()
+{
+		printf("Bootloader Done!\n");
+		toogle_alert();
+		printf("INT devices!\n");
+		setup();
+		printf("Done!\n");
+
+		// test
+		printf("Loading SD card!\n");
+		sd_raw_init();
+		sd_card_open();
+		screen_int();
+		printf("Done!\n");
+
+		_delay_ms(300);
+		// USB HOST
+		
+		// sd_file_new(filename);
+		// sd_file_open(filename);
+		// sd_file_write(filetext);
+		// sd_file_close();
+
+		// struct form main controller functions
+		//struct cont *controller;
+		printf("Allocate memory menus!\n");
+		sei();
+
+		_delay_ms(500);
+		
+		printf("System Online!\n");
+		clear_alert();
+		
+
+		setUpSerial_rpt();
+		main_setup();
+
+}
+/*** tasks */
+
+
+/*read usb host */
+void read_usb_Task()
+{
+	main_usb();
+	if (key_pressed == '1')
+	{
+		beep(40);
+	}			
+}
+
+/*** Send data on canbus task */
+void Send_can_Task(void)
+{
+	
+	if (can_queue_is_empty() ==0)
+	{
+		while(can_queue_is_empty() ==0)
+		{
+			send_data_on_canbus();
+		}
+	}
+	
+}
+
+// alocated in main for memory
+can_message_t * Rxmsg;
+
+void Recive_can_Task(void)
+{
+	
+	if (can_queue_is_empty() ==1)
+	{
+		CAN_data_receive(Rxmsg);
+	}
+}
+
+/*** Send data on canbus heartbeat */
+void Send_can_heartbeat(void)
+{
+	send_data_to_pi();
+	send_data_to_freq();
+}
+/*** Main taks  */
+void Main_task(void)
+{
+
+	//can_message_t  Rxmsg;
+
+		
+	/*if (Rxmsg.data[0] !=128)
+	{
+		//printf("fwd %i \n",Rxmsg.data[0]);
+	}
+	*/
+
+	if ( rs232radio.ptt == 1 || Select_buttion() == 1 || key_pressed == '*')
+	{
+		if (ptt_test ==0)
+		{
+			set_amp_id(2);
+			TX_sequens();
+			ptt_test =1;
+		}
+			
+			
+		if (Rxmsg->data[1] == 7)
+		{
+			amplifier.power_fwd =((Rxmsg->data[2] << 8) | Rxmsg->data[3]);
+			amplifier.power_rev =((Rxmsg->data[4] << 8) | Rxmsg->data[5]);
+				
+				
+		}
+			
+		amplifier.power_max = 250;
+		trasmit_slide();
+	}
+	else
+	{
+		if (ptt_test == 1)
+		{
+			RX_sequens();
+			ptt_test =0;
+				
+		}
+		main_screen();
+	}
+	
+}
 
 
 int y_pos = 0;  // global variable
-char * test[23];
+
+
 int main(void)
 {	
-	
 	rs232radio.enable = 0;
 	rs232radio.rs232_prescale=0;
 	rs232radio.radio_rs232 = 206;
@@ -190,158 +331,25 @@ int main(void)
 	//debug
 	rs232radio.amp_id=2;
 
-	printf("Bootloader Done!\n");
-	toogle_alert();
-	printf("INT devices!\n");
-	setup();
-	printf("Done!\n");
+	Setup_main();
+	scedular_setup();
+	beep(60);
 
-	// test
-	printf("Loading SD card!\n");
-	sd_raw_init();
-	sd_card_open();
-	screen_int();
-	printf("Done!\n");
-
-	_delay_ms(500);
-	// USB HOST 
+	addTask(1, read_usb_Task, 1);
+	addTask(2, Send_can_Task, 3);
+	addTask(5, Recive_can_Task, 4);
+	addTask(4, Send_can_heartbeat, 10);
+	addTask(3, Main_task, 2);
+	Rxmsg =malloc(sizeof(can_message_t *));
 	
-	// sd_file_new(filename);
-	// sd_file_open(filename);
-	// sd_file_write(filetext);
-	// sd_file_close();
-
-	// struct form main controller functions
-	//struct cont *controller;
-	printf("Allocate memory menus!\n");
-	sei();
-
-	_delay_ms(500);	
-	// sd_file_new(filename);
-	// sd_file_open(filename);
-	// sd_file_write(filetext);
-	// sd_file_close()
-	printf("System Online!\n");
-	clear_alert();
-	can_message_t  Rxmsg;
-	//can_message_t  TXmsg;
-	setUpSerial_rpt();
-
-
-	int ptt_test =0;
-	
-	
-	/*	printf(" id= %d \r\n",newMessage.msg_id);
-	for (int i =0; i < newMessage.data_length;i++)
-	{
-		printf(" data[%i]:%i\r\n",i,newMessage.data[i]);
-		
+	for(;;)	
+	{	
+		dispatchTasks();	
 	}
-*/
-	//printf("\r\n");
-	
-// 	Can_get_identity(newMessage);
-// 		  switch(newMessage.data[0])
-// 		  {
-// 			  case 15:
-// 				rotor_curent =  (newMessage.data[2] << 8) | newMessage.data[3];
-// 				break;
-// 			  default:
-// 				break;
-// 		  }
-	
- int send_counter=0;
- main_setup();
-
- for(;;)	
- {
-
- 
-	//CAN_data_receive(&Rxmsg);			
-		CAN_data_receive(&Rxmsg);
-		if (Rxmsg.data[0] !=128)
-		{
-			//printf("fwd %i \n",Rxmsg.data[0]);
-		}
-		main_usb ();
-		if (key_pressed == '1')
-		{
-			beep(40);
-		}
+	free(Rxmsg);
+	return 0; /*** Will newer get here :) */
 		
-		
-		if ( rs232radio.ptt == 1 || Select_buttion() == 1 || key_pressed == '*')
-		{
 			
-
-			
-			if (ptt_test ==0)
-			{
-				set_amp_id(2);
-				TX_sequens();
-				ptt_test =1;
-			}
-			
-			
-			if (Rxmsg.data[1] == 7)
-			{
-				amplifier.power_fwd =((Rxmsg.data[2] << 8) | Rxmsg.data[3]);
-				amplifier.power_rev =((Rxmsg.data[4] << 8) | Rxmsg.data[5]);
-				
-							
-			}
-			
-			
-
-			amplifier.power_max = 250;
-			trasmit_slide();
-		}
-		else
-		{
-			if (ptt_test == 1)
-			{
-				RX_sequens();
-				ptt_test =0;
-				
-			}
-		
-
-			/* create a Function to send CAN data and when no packet print screen */
-			if (can_queue_is_empty() == 1)
-			{
-				// main screen process
-				if (key_pressed == '2')
-				{
-					GOTO_Direction();
-				}
-				else
-				{
-					main_screen();
-				}
-				
-
-					
-				
-				if (send_counter > 10)
-				{
-					send_data_to_pi();
-					send_data_to_freq();
-					send_counter =0;
-				}
-				send_counter++;
-			
-			
-				
-			}
-			else
-			{
-				send_data_on_canbus();
-			}
-			
-		}
-
-  }
-   
 }
 
 
@@ -389,17 +397,17 @@ Sending the CAN Buss messasge to MCP2515 with a delay
 */
 void send_data_on_canbus()
 {
-	if (can_queue_is_empty() ==0)
-	{
-		//printf("send_data\n");
-		can_message_t send;
-		send = can_queue_Front();
-		//printf("%i\n",send.data[0]);
-		CAN_message_send(&send);
-		can_queue_Dequeue();
-	}
+
+	//printf("send_data\n");
+	can_message_t send;
+	send = can_queue_Front();
+	//printf("%i\n",send.data[0]);
+	CAN_message_send(&send);
+	can_queue_Dequeue();
+	_delay_ms(5);
 	
-	_delay_ms(10);
+	
+
 }
 
 void trasmit_slide()
@@ -477,9 +485,6 @@ int max_antennas =7;
 int meny_selected =0;
 
 
-
-
-
 void main_screen()
 {
 	//meny_selectors(menu);
@@ -488,124 +493,124 @@ void main_screen()
 	char menu_test[7][20] ={"Rotor","Radio","BUSS","CAN","test4"} ;
 		
 	char str[8];
-    do
-    {
+	do
+	{
 	  
-	  uint8_t  h;
-	  u8g_SetFont(&u8g, u8g_font_6x10);
-	  u8g_DrawFrame(&u8g, 70, 0, 58, 64);
-	  u8g_SetFontRefHeightText(&u8g);
-	  u8g_SetFontPosTop(&u8g);
-	  get_band();
-	  button_test();
+		  uint8_t  h;
+		  u8g_SetFont(&u8g, u8g_font_6x10);
+		  u8g_DrawFrame(&u8g, 70, 0, 58, 64);
+		  u8g_SetFontRefHeightText(&u8g);
+		  u8g_SetFontPosTop(&u8g);
+		  get_band();
+		  button_test();
 	  
-	  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
+		  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
 	  
-	  if (meny_selected <0)
-	  {
-		  meny_selected=0;
-	  }
-	  if (meny_selected >4)
-	  {
-		  meny_selected =4;
-	  }
+		  if (meny_selected <0)
+		  {
+			  meny_selected=0;
+		  }
+		  if (meny_selected >4)
+		  {
+			  meny_selected =4;
+		  }
 	   
 	  
-	  for(int i=0;i <= 4; i++)
-	  {
-		  u8g_SetDefaultForegroundColor(&u8g);
-		// bakgrund_meny
-		 if(meny_selected == i)
-		 {
-			  u8g_DrawBox(&u8g, 71, i*h+1, 57, 11);     // draw cursor bar
-			  u8g_SetDefaultBackgroundColor(&u8g);	  
-		 }
-		  // skriver ut Antenner
+		  for(int i=0;i <= 4; i++)
+		  {
+			  u8g_SetDefaultForegroundColor(&u8g);
+			// bakgrund_meny
+			 if(meny_selected == i)
+			 {
+				  u8g_DrawBox(&u8g, 71, i*h+1, 57, 11);     // draw cursor bar
+				  u8g_SetDefaultBackgroundColor(&u8g);	  
+			 }
+			  // skriver ut Antenner
 		
-		 u8g_DrawStr(&u8g, 72, 10*i, menu_test[i]);
+			 u8g_DrawStr(&u8g, 72, 10*i, menu_test[i]);
 	 
 		  
-		  if (meny_selected == 4)
-			u8g_SetDefaultForegroundColor(&u8g);
+			  if (meny_selected == 4)
+				u8g_SetDefaultForegroundColor(&u8g);
 		
 
-	  }	  
+		  }	  
 	  
 
-if(meny_selected == 0)
-{
-		draw_angel_circle(rotor_curent,0);
-		//draw_angel_circle(rotor_target,1);
+	if(meny_selected == 0)
+	{
+			draw_angel_circle(rotor_curent,0);
+			//draw_angel_circle(rotor_target,1);
 		
-	// showing the band
+		// showing the band
 		
 	
 	
 
-	if(rs232radio.meter == 1)
-	{
+		if(rs232radio.meter == 1)
+		{
 	
-		sprintf(str, "%dM", rs232radio.band);
-		u8g_DrawStr(&u8g, 2, 52,str );
+			sprintf(str, "%dM", (int)rs232radio.band);
+			u8g_DrawStr(&u8g, 2, 52,str );
 
-	}else
-	{
-		sprintf(str, "%dcM", rs232radio.band);
-		u8g_DrawStr(&u8g, 2, 52,str );
+		}else
+		{
+			sprintf(str, "%dcM", (int)rs232radio.band);
+			u8g_DrawStr(&u8g, 2, 52,str );
+		}
+		
+		//Show_Radio_freq(2,10);
+		
+	
+
+		
+	
 	}
-		
-	//Show_Radio_freq(2,10);
-		
+	else if (meny_selected == 1)
+	{
+		u8g_SetFont(&u8g, u8g_font_6x10);
 	
 
-		
+		char freq_basform[10];
+			sprintf(freq_basform, "%ld", rs232radio.freqvensy);
 	
-}
-else if (meny_selected == 1)
-{
-	u8g_SetFont(&u8g, u8g_font_6x10);
-	
-
-	char freq_basform[10];
-		sprintf(freq_basform, "%ld", rs232radio.freqvensy);
-	
-		if (rs232radio.band >30 && rs232radio.meter == 1)
-		{
-			sprintf(str, "%.1s.%.3s.%.2s", freq_basform,freq_basform+1,freq_basform+4);
-		}
-		else if (rs232radio.band >3 && rs232radio.meter == 1)
-		{
-			sprintf(str, "%.2s.%.3s.%.2s", freq_basform,freq_basform+2,freq_basform+5);
-		}
-		else
-		{
-			sprintf(str, "%.3s.%.3s.%.2s",freq_basform,freq_basform+3,freq_basform+6);
+			if (rs232radio.band >30 && rs232radio.meter == 1)
+			{
+				sprintf(str, "%.1s.%.3s.%.2s", freq_basform,freq_basform+1,freq_basform+4);
+			}
+			else if (rs232radio.band >3 && rs232radio.meter == 1)
+			{
+				sprintf(str, "%.2s.%.3s.%.2s", freq_basform,freq_basform+2,freq_basform+5);
+			}
+			else
+			{
+				sprintf(str, "%.3s.%.3s.%.2s",freq_basform,freq_basform+3,freq_basform+6);
 			
-		}
+			}
 		
-		u8g_DrawStr(&u8g, 2, 2,"Frequency:" );
-		u8g_DrawStr(&u8g, 2, 12,str );
+			u8g_DrawStr(&u8g, 2, 2,"Frequency:" );
+			u8g_DrawStr(&u8g, 2, 12,str );
 	
-	u8g_DrawStr(&u8g, 2, 22,"Band:" );
-	if(rs232radio.meter == 1)
-	{
-		sprintf(str, "%dM", rs232radio.band);
-		u8g_DrawStr(&u8g, 40, 22,str );
+		u8g_DrawStr(&u8g, 2, 22,"Band:" );
+		if(rs232radio.meter == 1)
+		{
+			sprintf(str, "%dM", (int)rs232radio.band);
+			u8g_DrawStr(&u8g, 40, 22,str );
 
-	}else
-	{
-		sprintf(str, "%dcM", rs232radio.band);
-		u8g_DrawStr(&u8g, 40, 22,str );
+		}else
+		{
+			sprintf(str, "%dcM",(int) rs232radio.band);
+			u8g_DrawStr(&u8g, 40, 22,str );
+		}
+		u8g_DrawStr(&u8g, 2, 32,"Mode:" );
+	
+		u8g_DrawStr(&u8g, 40, 32,rs232radio.mode);
+
+	
+	
 	}
-	u8g_DrawStr(&u8g, 2, 32,"Mode:" );
 	
-	u8g_DrawStr(&u8g, 40, 32,rs232radio.mode);
-
-	
-	
-}
-	
-    } while ( u8g_NextPage(&u8g) );	
+} while ( u8g_NextPage(&u8g) );	
 	
 }
 
