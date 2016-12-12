@@ -24,10 +24,12 @@ private slots:
     void serialRecived();
 
     void on_Cvs_load_clicked();
+    void Radio_frq(QString freq);
 
 private:
     Ui::Controll *ui;
     QStandardItemModel *model;
+
 };
 
 #endif // CONTROLL_H

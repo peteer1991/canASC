@@ -44,6 +44,7 @@ extern char key_pressed;
 radio rs232radio;
 Amp	amplifier;
 
+
 int rotor_curent =0;
 int rotor_target =0;
 int curent_menu =0;
@@ -57,7 +58,7 @@ void send_data_to_freq();
 void send_data_to_pi();
 void trasmit_slide();
 void easy_com_angel();
-int get_band();
+void get_band();
 void main_screen();
 int Select_buttion();
 void send_data_on_canbus();
@@ -87,7 +88,6 @@ void setup()
 	PORTH.DIRCLR    =    PIN5_bm;
 	PORTH.PIN5CTRL  =    PORT_OPC_PULLUP_gc;
 	PORTH.DIRCLR    =    PIN4_bm;
-	PORTA.PIN5CTRL  =    PORT_OPC_PULLDOWN_gc;
 	setup_buttons(); //*burrons config *//
 	
 	// port D setup interupt
@@ -106,8 +106,9 @@ void setup()
 	
 	
 	//PORTH PTT INT
-	PORTA.INT0MASK = PIN7_bm; // PD0 löst Interrupt 0 aus. 
+	PORTA.INT0MASK = PIN0_bm; // PD0 löst Interrupt 0 aus. 
 	PORTA_INTCTRL = PORT_INT0LVL_MED_gc; // Port D Interrupt 0: Medium Level
+	PORTA.DIRSET = PIN2_bm;
 	
 	
 	// Can pin interupt
@@ -230,40 +231,54 @@ void Setup_main()
 
 
 /*read usb host */
-void read_usb_Task()
+void read_system_Task()
 {
+	
+	
 	main_usb();
+	// readcan
+	Send_can_Task();
 	if (key_pressed == '1')
 	{
 		beep(40);
-	}			
-}
-
-/*** Send data on canbus task */
-void Send_can_Task(void)
-{
-	
-	if (can_queue_is_empty() ==0)
-	{
-		while(can_queue_is_empty() ==0)
-		{
-			send_data_on_canbus();
-		}
 	}
-	
+			
 }
 
 // alocated in main for memory
 can_message_t * Rxmsg;
 
-void Recive_can_Task(void)
+
+/*** Send data on canbus task */
+void Send_can_Task(void)
 {
 	
+//	printf("Send can \n");
+	if (can_queue_is_empty() ==0)
+	{
+		
+		while(can_queue_is_empty() ==0)
+		{
+			
+			send_data_on_canbus();
+		}
+	}
 	if (can_queue_is_empty() ==1)
 	{
 		CAN_data_receive(Rxmsg);
 	}
+	
 }
+int heartbeat= 0;
+void print_heartbeat()
+{
+	heartbeat++;
+	printf("2;h;%i\n",heartbeat);
+	printf("1;%s;%i;%ld;%ld;\n",rs232radio.model,get_amp_id(),rs232radio.freqvensy,rs232radio.band);
+}
+
+
+
 
 /*** Send data on canbus heartbeat */
 void Send_can_heartbeat(void)
@@ -272,6 +287,7 @@ void Send_can_heartbeat(void)
 	send_data_to_freq();
 }
 /*** Main taks  */
+
 void Main_task(void)
 {
 
@@ -284,11 +300,12 @@ void Main_task(void)
 	}
 	*/
 
-	if ( rs232radio.ptt == 1 || Select_buttion() == 1 || key_pressed == '*')
+
+	if ( rs232radio.ptt == 1)
 	{
 		if (ptt_test ==0)
 		{
-			set_amp_id(2);
+			//set_amp_id(2);
 			TX_sequens();
 			ptt_test =1;
 		}
@@ -316,37 +333,47 @@ void Main_task(void)
 		main_screen();
 	}
 	
+	
+	
+	//heartbeat++;
+	//printf("Heartbeat %i\n",heartbeat);
 }
 
 
 int y_pos = 0;  // global variable
-
+extern void radio_pull_data_thread();
 
 int main(void)
 {	
 	rs232radio.enable = 0;
 	rs232radio.rs232_prescale=0;
 	rs232radio.radio_rs232 = 206;
-	rs232radio.model="Yesu-ft-857D";
+	rs232radio.model="Yesu ft-8xx";
 	//debug
 	rs232radio.amp_id=2;
 
 	Setup_main();
 	scedular_setup();
 	beep(60);
-
-	addTask(1, read_usb_Task, 1);
-	addTask(2, Send_can_Task, 3);
-	addTask(5, Recive_can_Task, 4);
-	addTask(4, Send_can_heartbeat, 10);
+	
+	
+	
+	addTask(2, read_system_Task, 2);
 	addTask(3, Main_task, 2);
+	addTask(4, radio_pull_data_thread, 15);
+	addTask(5, Send_can_heartbeat, 4);
+	addTask(1, print_heartbeat, 10);
+	addTask(6, get_band, 4);
+
+
+	
 	Rxmsg =malloc(sizeof(can_message_t *));
 	
 	for(;;)	
 	{	
 		dispatchTasks();	
 	}
-	free(Rxmsg);
+	free(Rxmsg); 
 	return 0; /*** Will newer get here :) */
 		
 			
@@ -406,6 +433,8 @@ void send_data_on_canbus()
 	can_queue_Dequeue();
 	_delay_ms(5);
 	
+
+	
 	
 
 }
@@ -447,12 +476,12 @@ void trasmit_slide()
 			
 			if(rs232radio.meter == 1)
 			{
-				sprintf(text, "%dM", rs232radio.band);
+				sprintf(text, "%ldM", rs232radio.band);
 				u8g_DrawStr(&u8g, 110, 54,text );
 
 			}else
 			{
-				sprintf(text, "%dcM", rs232radio.band);
+				sprintf(text, "%ldcM", rs232radio.band);
 				u8g_DrawStr(&u8g, 110, 54,text );
 			}
 			
@@ -483,7 +512,7 @@ void screen_int()
 
 int max_antennas =7;
 int meny_selected =0;
-
+int hide_meny =0;
 
 void main_screen()
 {
@@ -496,45 +525,69 @@ void main_screen()
 	do
 	{
 	  
-		  uint8_t  h;
-		  u8g_SetFont(&u8g, u8g_font_6x10);
-		  u8g_DrawFrame(&u8g, 70, 0, 58, 64);
-		  u8g_SetFontRefHeightText(&u8g);
-		  u8g_SetFontPosTop(&u8g);
-		  get_band();
-		  button_test();
-	  
-		  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
-	  
-		  if (meny_selected <0)
-		  {
-			  meny_selected=0;
-		  }
-		  if (meny_selected >4)
-		  {
-			  meny_selected =4;
-		  }
-	   
-	  
-		  for(int i=0;i <= 4; i++)
-		  {
-			  u8g_SetDefaultForegroundColor(&u8g);
-			// bakgrund_meny
-			 if(meny_selected == i)
-			 {
-				  u8g_DrawBox(&u8g, 71, i*h+1, 57, 11);     // draw cursor bar
-				  u8g_SetDefaultBackgroundColor(&u8g);	  
-			 }
-			  // skriver ut Antenner
+		uint8_t  h;
+		if (meny_selected <0)
+		{
+			meny_selected=0;
+		}
+		if (meny_selected >4)
+		{
+			meny_selected =4;
+		}
 		
-			 u8g_DrawStr(&u8g, 72, 10*i, menu_test[i]);
+		
+		if (hide_meny == 0)
+		{
+		
+			  u8g_SetFont(&u8g, u8g_font_6x10);
+			  u8g_DrawFrame(&u8g, 70, 0, 58, 64);
+			  u8g_SetFontRefHeightText(&u8g);
+			  u8g_SetFontPosTop(&u8g);
+			  //get_band();
+			  //button_test();
+	  
+			  h = u8g_GetFontAscent(&u8g)-u8g_GetFontDescent(&u8g);
+	  
+
+	  
+			  for(int i=0;i <= 4; i++)
+			  {
+				  u8g_SetDefaultForegroundColor(&u8g);
+				// bakgrund_meny
+				 if(meny_selected == i)
+				 {
+					  u8g_DrawBox(&u8g, 71, i*h+1, 57, 11);     // draw cursor bar
+					  u8g_SetDefaultBackgroundColor(&u8g);	  
+				 }
+				  // skriver ut Antenner
+		
+				 u8g_DrawStr(&u8g, 72, 10*i, menu_test[i]);
 	 
 		  
-			  if (meny_selected == 4)
-				u8g_SetDefaultForegroundColor(&u8g);
+				  if (meny_selected == 4)
+					u8g_SetDefaultForegroundColor(&u8g);
 		
 
-		  }	  
+			  }	  
+		  }
+		  
+		  /** button segment */
+		  if (buttion_one() == 1 || key_pressed == 'b')
+		  {
+			  if (hide_meny == 0)
+			  {
+				  hide_meny = 1;
+				  // add a press delay
+				  while(buttion_one()  ==1);
+				  
+			  }
+			  else
+			  {
+				  // add a press delay
+				  while(buttion_one()  ==1);
+				  hide_meny =0;
+			  }
+		  }
 	  
 
 	if(meny_selected == 0)
@@ -550,12 +603,12 @@ void main_screen()
 		if(rs232radio.meter == 1)
 		{
 	
-			sprintf(str, "%dM", (int)rs232radio.band);
+			sprintf(str, "%ldM", rs232radio.band);
 			u8g_DrawStr(&u8g, 2, 52,str );
 
 		}else
 		{
-			sprintf(str, "%dcM", (int)rs232radio.band);
+			sprintf(str, "%ldcM",rs232radio.band);
 			u8g_DrawStr(&u8g, 2, 52,str );
 		}
 		
@@ -594,12 +647,12 @@ void main_screen()
 		u8g_DrawStr(&u8g, 2, 22,"Band:" );
 		if(rs232radio.meter == 1)
 		{
-			sprintf(str, "%dM", (int)rs232radio.band);
+			sprintf(str, "%ldM", rs232radio.band);
 			u8g_DrawStr(&u8g, 40, 22,str );
 
 		}else
 		{
-			sprintf(str, "%dcM",(int) rs232radio.band);
+			sprintf(str, "%ldcM", rs232radio.band);
 			u8g_DrawStr(&u8g, 40, 22,str );
 		}
 		u8g_DrawStr(&u8g, 2, 32,"Mode:" );
@@ -971,7 +1024,7 @@ void easy_com_angel(volatile unsigned char  * data_in)
 
 
 
-int get_band()
+void get_band()
 {
 	// ft-857d paket
 	// get band from freqvensy yeasu
@@ -1046,7 +1099,6 @@ int get_band()
 		}
 	}
 	
-	return 0;
 }
 
 
@@ -1105,8 +1157,10 @@ ISR(PORTD_INT0_vect)
 }
 ISR(PORTA_INT0_vect)
 {
-	if((PORTA.IN & PIN7_bm) ==0 )
+	if((PORTA.IN & PIN0_bm) ==0 )
+	{
 		rs232radio.ptt =1;
+	}
 	else
 		rs232radio.ptt =0;
 	

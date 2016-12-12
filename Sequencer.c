@@ -14,7 +14,7 @@ wait_for_struckt wait_for;
 
 void TX_sequens()
 {
-
+	radio_inhibit(1);
 	
 	if (Seqvenser.preamp >0)
 	{
@@ -38,6 +38,11 @@ void TX_sequens()
 	if ((wait_for.preamp == 0) && (wait_for.amplifier == 0))
 	{
 		radio_inhibit(0);
+			if (Debug_seq == 1 )
+			{
+				printf("Inhibit off\n");
+			}
+		
 	}
 	
 }
@@ -129,11 +134,11 @@ void radio_inhibit(int state)
 		{
 			printf("Start inhibit\n");
 		}
-		PORTH.OUTSET = PIN4_bm;
+		PORTA.OUTSET = PIN2_bm;
 	}
 	else
 	{
-		PORTH.OUTCLR = PIN4_bm;
+		PORTA.OUTCLR = PIN2_bm;
 	}
 		
 }
@@ -152,4 +157,8 @@ void set_amp_id(int amp_id)
 void Set_preamp_id(int preamp_id)
 {
 	Seqvenser.preamp = preamp_id;
+}
+int get_amp_id()
+{
+	return Seqvenser.Amp_id;
 }

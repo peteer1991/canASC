@@ -163,6 +163,7 @@ void Task2(void)
 void scedular_setup()
 {
 		TCC1.CNT = 0;// Zeroise count
+		//TCC1.PER = 8; //Period
 		TCC1.PER = 8; //Period
 		TCC1.CTRLA = TC_CLKSEL_DIV1024_gc; //Divider
 		TCC1.INTCTRLA = TC_OVFINTLVL_LO_gc; //Liow level interrupt
@@ -173,19 +174,3 @@ void scedular_setup()
 		sei();
 }
 
-int main_test(void)
-{
-
-	// add tasks, id is arbitrary
-	// task1 runs every 1 second
-	addTask(1, Task1, 1);
-
-	// task2 runs every 4 seconds
-	addTask(2, Task2, 10);
-
-	// enable all interrupts
-	
-	for(;;)
-	dispatchTasks();
-	return 0; // will never reach here
-}

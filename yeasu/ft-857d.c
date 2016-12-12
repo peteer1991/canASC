@@ -229,9 +229,47 @@ ISR(USARTC0_RXC_vect)
 
 	
 }
+void radio_pull_data_thread()
+{
+	// koden skickar ut data till radion då
+	// logprogrammet inte gör det
+	
+	if (count_active_temp == count_active )
+	{
+		number_of_readed_byte=0;
+		switch(scan_for)
+		{
+			case 0:
+			send_get_freq();
+			cat_message_type = CAT_READ_FREQ_MODE;
+			scan_for++;
+			break;
+			case 1:
+			send_get_status();
+			cat_message_type = CAT_READ_STATUS;
+			scan_for++;
+			break;
+			case 2:
+			stand_alone_transmit=1;
+			send_get_rxstatus();
+			cat_message_type = CAT_READ_RXSTATUS;
+			scan_for++;
+			break;
+			default:
+			scan_for=0;
+			controller_tx=0;
+			break;
+			
+		}
+		
+	}
+}
+
+
 // skriver kommandon till radion för att få ut data då logprogramet ej är på
 ISR(TCC0_OVF_vect)
 {
+	/*
 	// koden skickar ut data till radion då
 	// logprogrammet inte gör det
 	
@@ -264,6 +302,8 @@ ISR(TCC0_OVF_vect)
 		}
 		
 	}
+	
+*/	
 	update_uptime();
 	count_active_temp =count_active;
 }

@@ -17,3 +17,4 @@ void preamp_ready();
 void amp_ready();
 void set_amp_id(int amp_id);
 void Set_preamp_id(int preamp_id);
+int get_amp_id();

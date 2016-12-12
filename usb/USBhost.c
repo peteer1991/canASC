@@ -97,7 +97,7 @@ void main_setup( void )
 void main_usb ( void )
 {
 	MAX3421E_Task();
-	USB_Task();   
+	USB_Task();	
 	if (usb_task_state == 64)
 	{
 		testKbd( 1 );
@@ -128,9 +128,10 @@ void testKbd( BYTE addr )
 	rcode = XferGetIdle( addr, 0, hid_device.interface, 0, &tmpbyte );
 	rcode = XferGetProto( addr, 0, hid_device.interface, &tmpbyte );
 	if( rcode ) {   //error handling
-		//printf("\r\nGetProto Error. Error code ");
-		//printf( "%i",rcode );
+	//	printf("\r\nGetProto Error. Error code ");
+	//	printf( "%i",rcode );
 	}
+	
 	//delay = uptime + 5;
 	//while( uptime < delay );    //wait polling interval
 	rcode = kbdPoll( &kbdbuf );
