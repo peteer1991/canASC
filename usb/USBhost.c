@@ -97,12 +97,23 @@ void main_setup( void )
 void main_usb ( void )
 {
 	MAX3421E_Task();
-	USB_Task();	
+
+	
+	if (usb_task_state != 64)
+	{
+		//testKbd( 1 );
+		USB_Task();	
+	}
+
+	
+	
+}
+void read_usb_hid()
+{
 	if (usb_task_state == 64)
 	{
 		testKbd( 1 );
 	}
-	
 }
 
 void Board_init( void )
@@ -124,13 +135,15 @@ void testKbd( BYTE addr )
 	//char* byteptr;
 	BOOT_KBD_REPORT kbdbuf;
 	BOOT_KBD_REPORT localbuf;
-
+	
 	rcode = XferGetIdle( addr, 0, hid_device.interface, 0, &tmpbyte );
 	rcode = XferGetProto( addr, 0, hid_device.interface, &tmpbyte );
+	/*
 	if( rcode ) {   //error handling
 	//	printf("\r\nGetProto Error. Error code ");
 	//	printf( "%i",rcode );
 	}
+	*/
 	
 	//delay = uptime + 5;
 	//while( uptime < delay );    //wait polling interval
@@ -143,22 +156,17 @@ void testKbd( BYTE addr )
 	//            byteptr++;
 	//        }
 	//send_string( crlf );
+
 	for( i = 0; i < 1; i++ ) {
 		if( kbdbuf.keycode[ i ] == 0 ) {        //empty position means it and all subsequent positions are empty
 			break;
 		}
 	
-		if( prevCodeComp( kbdbuf.keycode[ i ], &localbuf ) == FALSE ) {
+		//if( prevCodeComp( kbdbuf.keycode[ i ], &localbuf ) == FALSE ) {
 			//                send_hexbyte( kbdbuf.keycode[ i ] );
 			char print_char= HIDtoa( &kbdbuf,i );
-			if(print_char != 0x07)
-			{
-				//printf("%c", print_char);
-					
-			}
 			key_pressed = print_char;
-				
-			//                send_string( crlf );
+			
 			switch(print_char)
 			{
 				case '+':
@@ -172,8 +180,8 @@ void testKbd( BYTE addr )
 					
 			}
 			
-		}
-		memcpy(( char* )&localbuf, ( const  char* )&kbdbuf, sizeof( BOOT_KBD_REPORT )); 
+		//}
+		//memcpy(( char* )&localbuf, ( const  char* )&kbdbuf, sizeof( BOOT_KBD_REPORT )); 
 	}
 
 }

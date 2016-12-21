@@ -260,7 +260,6 @@ void MAX3421E_Task( void )
 	
     if( (PORTF.IN & PIN6_bm) == 0 ) {
         MaxIntHandler();
-
     }
     /*
 	if( MAX3421E_GPX == 1 ) {

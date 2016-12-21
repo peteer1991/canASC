@@ -10,3 +10,4 @@ void main_usb ( void );
 
 
 void Board_init( void );
+void read_usb_hid();

@@ -36,7 +36,7 @@ void setup_timmer()
 {
 	// read timmer for radio timeout
 	TCC0.CNT = 0;// Zeroise count
-	TCC0.PER = 80000; //Period
+	TCC0.PER = 2000; //Period
 	TCC0.CTRLA = TC_CLKSEL_DIV1024_gc; //Divider
 	TCC0.INTCTRLA = TC_OVFINTLVL_LO_gc; //Liow level interrupt
 	TCC0.INTFLAGS = 0x01; // clear any initial interrupt flags
@@ -161,7 +161,7 @@ unsigned char * to_bcd_be( unsigned char bcd_data[], unsigned long  freq, unsign
 	return bcd_data;
 }
 
-
+int controller_trasmit =0;
 int Reissue_command =0; /** fix for some logprogram theat put pakets to fast*/
 ISR(USARTD0_RXC_vect)
 {
@@ -185,50 +185,51 @@ ISR(USARTD0_RXC_vect)
 				break;
 			
 		}
-
+		controller_trasmit=0;
 	}
-	
-	USARTC0_DATA = test1a;
 
+
+	USARTC0_DATA = test1a;
+	
 }
 
 ISR(USARTC0_RXC_vect)
 {
-	char rx_data = USARTC0_DATA;
-
-	pc_read[number_of_transmitted_byte_pc] = rx_data;
+		char rx_data = USARTC0_DATA;
+		pc_read[number_of_transmitted_byte_pc] = rx_data;
+		number_of_transmitted_byte_pc++;
 	
-	number_of_transmitted_byte_pc++;
-
-	
-	if(number_of_transmitted_byte_pc >4)
-	{
-		number_of_transmitted_byte_pc =0;
-		
-		if(Reissue_command == 0)
+		if(number_of_transmitted_byte_pc >4)
 		{
-			Reissue_command=1;
-			switch(pc_read[4])
-			{
-				case CAT_RX_FREQ_CMD:
-					cat_message_type= CAT_READ_FREQ_MODE;
-					number_of_readed_byte=0;
-					break;
-				default:
-					cat_message_type =0;
-					//number_of_readed_byte =0;
-				break;
-			}
-		}
+			number_of_transmitted_byte_pc =0;
 		
-	}
+			if(Reissue_command == 0)
+			{
+				Reissue_command=1;
+				switch(pc_read[4])
+				{
+					case CAT_RX_FREQ_CMD:
+						cat_message_type= CAT_READ_FREQ_MODE;
+						number_of_readed_byte=0;
+						break;
+					default:
+						cat_message_type =0;
+						//number_of_readed_byte =0;
+					break;
+				}
+			}
+		
+		}
+
+		USARTD0_DATA = rx_data;
 	
-	USARTD0_DATA = rx_data;
+	
 	
 	count_active++;
 
 	
 }
+int check_count =0;
 void radio_pull_data_thread()
 {
 	// koden skickar ut data till radion då
@@ -236,6 +237,7 @@ void radio_pull_data_thread()
 	
 	if (count_active_temp == count_active )
 	{
+		
 		number_of_readed_byte=0;
 		switch(scan_for)
 		{
@@ -261,8 +263,14 @@ void radio_pull_data_thread()
 			break;
 			
 		}
+		controller_trasmit=1;
 		
 	}
+
+	
+	
+
+
 }
 
 
@@ -304,6 +312,15 @@ ISR(TCC0_OVF_vect)
 	}
 	
 */	
+	
+	check_count++;
+	if (check_count == 255)
+	{
+
+		count_active_temp = count_active;
+		check_count =0;
+	}
+	
+		
 	update_uptime();
-	count_active_temp =count_active;
 }

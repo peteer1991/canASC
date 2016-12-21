@@ -46,7 +46,7 @@ uint16_t count = 0;
 // initialises the task list
 void initScheduler(void)
 {
-	for(uint8_t i=0; i<MAX_TASKS; i++)
+	for(int i=0; i<MAX_TASKS; i++)
 	{
 		task_list[i].id = 0;
 		task_list[i].task = (task_t)0x00;
@@ -112,21 +112,23 @@ void dispatchTasks(void)
 {
 	for(uint8_t i=0;i<MAX_TASKS;i++)
 	{
+		
 		// check for a valid task ready to run
-		if( !task_list[i].delay &&
-		task_list[i].status == RUNNABLE )
+		if( !task_list[i].delay && task_list[i].status == RUNNABLE )
 		{
+			
 			// task is now running
 			task_list[i].status = RUNNING;
 			// call the task
 			(*task_list[i].task)();
+			
 
 			// reset the delay
 			task_list[i].delay =
 			task_list[i].period;
 			// task is runnable again
 			task_list[i].status = RUNNABLE;
-		}
+		}		
 	}
 }
 
@@ -134,17 +136,23 @@ void dispatchTasks(void)
 // each tick 50ms apart
 ISR(TCC1_OVF_vect)
 {
-	count ++;
-	if( count == 392 )
+	// cycle through available tasks
+	for(int i=0;i<MAX_TASKS;i++)
 	{
-		count = 0;
-		// cycle through available tasks
-		for(uint8_t i=0;i<MAX_TASKS;i++)
+		if( task_list[i].status == RUNNABLE)
 		{
-			if( task_list[i].status == RUNNABLE )
-			task_list[i].delay--;
+			
+
+			if (task_list[i].delay >0)
+			{
+				task_list[i].delay--;
+			}
+			
+			
 		}
+			
 	}
+
 }
 
 // Task definitions
@@ -163,8 +171,8 @@ void Task2(void)
 void scedular_setup()
 {
 		TCC1.CNT = 0;// Zeroise count
-		//TCC1.PER = 8; //Period
-		TCC1.PER = 8; //Period
+		TCC1.PER = 1562; //Period
+		//TCC1.PER = 4; //Period
 		TCC1.CTRLA = TC_CLKSEL_DIV1024_gc; //Divider
 		TCC1.INTCTRLA = TC_OVFINTLVL_LO_gc; //Liow level interrupt
 		TCC1.INTFLAGS = 0x01; // clear any initial interrupt flags

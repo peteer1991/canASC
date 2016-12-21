@@ -32,6 +32,7 @@
 
 
 
+
 u8g_t u8g;
 void draw();
 void setUpSerial_rpt();
@@ -230,6 +231,7 @@ void Setup_main()
 /*** tasks */
 
 
+
 /*read usb host */
 void read_system_Task()
 {
@@ -299,7 +301,7 @@ void Main_task(void)
 		//printf("fwd %i \n",Rxmsg.data[0]);
 	}
 	*/
-
+	
 
 	if ( rs232radio.ptt == 1)
 	{
@@ -330,6 +332,8 @@ void Main_task(void)
 			ptt_test =0;
 				
 		}
+		
+		read_usb_hid();
 		main_screen();
 	}
 	
@@ -355,15 +359,21 @@ int main(void)
 	Setup_main();
 	scedular_setup();
 	beep(60);
+
 	
 	
 	
-	addTask(2, read_system_Task, 2);
-	addTask(3, Main_task, 2);
-	addTask(4, radio_pull_data_thread, 15);
-	addTask(5, Send_can_heartbeat, 4);
-	addTask(1, print_heartbeat, 10);
-	addTask(6, get_band, 4);
+	addTask(1, read_system_Task, 2);
+	addTask(2, Main_task, 2);
+	addTask(3, radio_pull_data_thread, 2);
+	addTask(4, Send_can_heartbeat, 4);
+	addTask(5, print_heartbeat, 20);
+
+	
+
+	
+	//addTask(6, get_band, 5);
+	//set_amp_id(2);
 
 
 	
@@ -519,8 +529,8 @@ void main_screen()
 	//meny_selectors(menu);
 	u8g_FirstPage(&u8g);
 	
-	char menu_test[7][20] ={"Rotor","Radio","BUSS","CAN","test4"} ;
-		
+	char menu_test[7][20] ={"Rotor","Radio","Amplifier","Antenna","Settings"} ;
+	get_band();
 	char str[8];
 	do
 	{
@@ -1159,6 +1169,7 @@ ISR(PORTA_INT0_vect)
 {
 	if((PORTA.IN & PIN0_bm) ==0 )
 	{
+		radio_inhibit(1);
 		rs232radio.ptt =1;
 	}
 	else
