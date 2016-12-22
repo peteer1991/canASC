@@ -276,7 +276,7 @@ void print_heartbeat()
 {
 	heartbeat++;
 	printf("2;h;%i\n",heartbeat);
-	printf("1;%s;%i;%ld;%ld;\n",rs232radio.model,get_amp_id(),rs232radio.freqvensy,rs232radio.band);
+	printf("1;%s;%i;%ld;%ld;%s;\n",rs232radio.model,get_amp_id(),rs232radio.freqvensy,rs232radio.band,rs232radio.mode);
 }
 
 
@@ -367,7 +367,7 @@ int main(void)
 	addTask(2, Main_task, 2);
 	addTask(3, radio_pull_data_thread, 2);
 	addTask(4, Send_can_heartbeat, 4);
-	addTask(5, print_heartbeat, 20);
+	addTask(5, print_heartbeat, 12);
 
 	
 
@@ -522,7 +522,7 @@ void screen_int()
 
 int max_antennas =7;
 int meny_selected =0;
-int hide_meny =0;
+int hide_meny =1;
 
 void main_screen()
 {
@@ -580,9 +580,25 @@ void main_screen()
 
 			  }	  
 		  }
+		  else
+		  {
+			u8g_SetFont(&u8g, u8g_font_6x10);
+			u8g_SetFontRefHeightText(&u8g);
+			u8g_SetFontPosTop(&u8g);
+
+			u8g_DrawFrame(&u8g, 80, 0, 45, 20);
+			u8g_DrawFrame(&u8g, 80, 22, 45, 20);
+			u8g_DrawFrame(&u8g, 80, 44, 45, 20);
+			
+			u8g_DrawStr(&u8g, 84, 5, "AMP ON");
+			u8g_DrawStr(&u8g, 84, 27, "PRE ON");
+			u8g_DrawStr(&u8g, 84, 48, "Menu");
+			u8g_DrawLine(&u8g,78,0,78,64);
+			
+		  }
 		  
 		  /** button segment */
-		  if (buttion_one() == 1 || key_pressed == 'b')
+		  if (buttion_one() == 1  )
 		  {
 			  if (hide_meny == 0)
 			  {
@@ -598,6 +614,26 @@ void main_screen()
 				  hide_meny =0;
 			  }
 		  }
+		  
+			if (key_pressed == 'b'  )
+			{
+				if (hide_meny == 0)
+				{
+					hide_meny = 1;
+					// add a press delay
+					_delay_ms(300);
+					key_pressed = ' ';
+				  		  
+				}
+				else
+				{
+					_delay_ms(300);
+					hide_meny =0;
+					key_pressed = ' ';
+				}
+			}
+		  
+
 	  
 
 	if(meny_selected == 0)
@@ -668,7 +704,9 @@ void main_screen()
 		u8g_DrawStr(&u8g, 2, 32,"Mode:" );
 	
 		u8g_DrawStr(&u8g, 40, 32,rs232radio.mode);
-
+		
+		u8g_DrawStr(&u8g, 2, 42,"Radio:" );
+		u8g_DrawStr(&u8g, 2, 52,rs232radio.model);
 	
 	
 	}

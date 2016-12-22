@@ -5,9 +5,15 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QTableView>
 #include <QFileDialog>
+#include "server.h"
 
 
 QSerialPort * serial;
+
+
+Server *server;
+
+
 
 Controll::Controll(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +21,7 @@ Controll::Controll(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    this->server_on =false;
     // Serial port on system
     Q_FOREACH(QSerialPortInfo port, QSerialPortInfo::availablePorts()) {
         ui->Serial->addItem(port.portName());
@@ -79,8 +86,13 @@ void Controll::serialRecived()
                ui->current_amp->setText("No amplifier is selected");
 
             }
+        if(query.length() >5)
+            ui->mode->setText(query[5]);
+
         this->Radio_frq(query[3]);
         }
+        if(this->server_on == true)
+         server->Send_heartbeat(data_read);
 
          qDebug() << query; // outputs "000012"
     }
@@ -114,6 +126,7 @@ void Controll::on_Cvs_load_clicked()
             ui->bussconfig->setItem(i,1,new QTableWidgetItem(wordList[1]));
             ui->bussconfig->setItem(i,2,new QTableWidgetItem(wordList[2]));
             ui->bussconfig->setItem(i,3,new QTableWidgetItem(wordList[3]));
+
 
             i++;
         }
@@ -171,5 +184,18 @@ void Controll::Radio_frq(QString freq)
    }
 
     ui->freqvensy->setText(toReturn);
+
+}
+
+
+
+void Controll::on_startserver_clicked()
+{
+    server->disconnect();
+    bool debug = true;
+    int port =ui->webport->text().toInt();
+    server= new Server(port, debug);
+    this->server_on =true;
+
 
 }

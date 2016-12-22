@@ -26,9 +26,12 @@ private slots:
     void on_Cvs_load_clicked();
     void Radio_frq(QString freq);
 
+    void on_startserver_clicked();
+
 private:
     Ui::Controll *ui;
     QStandardItemModel *model;
+    bool server_on;
 
 };
 

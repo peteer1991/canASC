@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  body {
+      position: relative; 
+  }
+  </style>
+  
+  
+  
+ <script>
+ var socket = new WebSocket("ws://localhost:1234");
+ socket.onopen = function(){
+	alert("Server has been Connected!");
+}
+socket.onmessage = function(msg){
+	console.log(msg.data.split(";"));
+	var datain =msg.data.split(";");
+	console.log(datain[0]);
+	if(datain[0] == 1)
+	{
+		$("#radio").html("Radio:"+datain[1]+"<br /> Frekvens:"+datain[3]+" "+ datain[5]);
+	}
+}
+function radio_format()
+{
+
+}
+
+$(document).ready(function() {
+
+
+	//The user has WebSockets
+
+	connect();
+	
+
+	function connect(){
+    	//the connect function code is below
+
+	}
+});
+
+
+ function test_data()
+ {
+	socket.send("b");
+
+ }
+ 
+ 
+ </script>
+ 
+
+ 
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">BLV Controller</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a data-toggle="tab" href="#section1">Radio</a></li>
+      <li><a data-toggle="tab" href="#section2">Antennas</a></li>
+      <li><a  data-toggle="tab" href="#section3">Rotor</a></li>
+      <li><a data-toggle="tab" href="#section4">AMP</a></li>
+    </ul>
+  </div>
+</nav>
+<div id="section1"  class="tab-pane active fade">
+	<p> Radio info</p>
+	<div id="radio">
+	</div>
+</div>
+<div id="section2"  class="tab-pane fade">
+	<p> antennas </p>
+
+</div>
+
+<div id="section3"  class="tab-pane fade">
+	<img src="map_vhf.png">
+</div>
+
+<div id="section4"  class="tab-pane fade">
+	AMPS
+</div>
+
+
+</body>
+</html>​
